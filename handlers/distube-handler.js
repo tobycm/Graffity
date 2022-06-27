@@ -40,39 +40,33 @@ module.exports = (client) => {
   })
 
   // Queue status template
-  const status = (queue) => `| Âm Lượng: \`${queue.volume}%\`\n| Filter: \`${"Off" || queue.filter}\`\n| Lặp: \`${queue.repeatMode ? queue.repeatMode == 2 ? "Queue" : "Song" : "Off"}\`\n| Tự động phát: \`${queue.autoplay ? "Off" : "On"}\``
+  const status = (queue) => `| Âm Lượng: \`${queue.volume}%\`\n| Filter: \`${queue.filter || "Off"}\`\n| Lặp: \`${queue.repeatMode ? queue.repeatMode == 2 ? "Queue" : "Song" : "Off"}\`\n| Tự động phát: \`${queue.autoplay ? "On" : "Off"}\``
 
   // DisTube event listeners, more in the documentation page
   client.distube
       .on("playSong", (message, queue, song) => message.channel.send(`Đang phát **${song.name}** - \`${song.formattedDuration}\`\nYêu cầu bởi: ${song.user.tag}\n${status(queue)}`)
       )
       .on("addSong", (message, queue, song) => message.channel.send(new MessageEmbed()
-          .setTitle("Đã thêm **" + song.name + "** vào Queue!")
-          .setURL(song.url)
+          .setDescription("Đã thêm **" + `[${song.name}](${song.url})` + "** vào Queue!")
           .setColor(ee.color)
-          .addField(`${queue.songs.length} Bài trong Queue`, `Thời lượng: \`${format(queue.duration*1000)}\``)
           .addField("Thời lượng", `\`${song.formattedDuration}\``)
           .setThumbnail(song.thumbnail)
           .setFooter(`Yêu cầu bởi: ${song.user.tag}`, song.user.displayAvatarURL({dynamic: true}))
         )
       )
       .on("playList", (message, queue, playlist, song) => message.channel.send(new MessageEmbed()
-            .setTitle("Đang phát danh sách phát **" + playlist.name + `** - \`[ ${playlist.songs.length} bài ]\``)
-            .setURL(playlist.url)
+            .setDescription("Đang phát danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ]\``)
             .setColor(ee.color)
             .addField("Nhạc đang phát:", `[${song.name}](${song.url})`)
             .addField("Thời lượng", `\`${playlist.formattedDuration}\``)
-            .addField(`${queue.songs.length} Bài trong Queue`, `Thời lượng: \`${format(queue.duration*1000)}\``)
             .setThumbnail(playlist.thumbnail.url)
             .setFooter(`Yêu cầu bởi: ${song.user.tag}`, song.user.displayAvatarURL({dynamic: true}))
         )
       )
       .on("addList", (message, queue, playlist) => message.channel.send(new MessageEmbed()
-            .setTitle("Đã thêm danh sách phát **" + playlist.name + `** - \`[ ${playlist.songs.length} bài ] vào Queue!\``)
-            .setURL(playlist.url)
+            .setDescription("Đã thêm danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ] vào Queue!\``)
             .setColor(ee.color)
             .addField("Thời lượng", `\`${playlist.formattedDuration}\``)
-            .addField(`${queue.songs.length} Bài trong Queue`, `Thời lượng: \`${format(queue.duration*1000)}\``)
             .setThumbnail(playlist.thumbnail.url)
             .setFooter(`Yêu cầu bởi: ${message.author.tag}`, message.author.displayAvatarURL({dynamic: true}))
         )
@@ -103,7 +97,7 @@ module.exports = (client) => {
       })
       .on("initQueue", queue => {
           queue.autoplay = false;
-          queue.volume = 100;
+          queue.volume = 50;
           queue.filter = "bassboost";
       }
     )
