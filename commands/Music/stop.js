@@ -9,6 +9,7 @@ module.exports = {
     description: 'stop the current track',
     run: async (client, message, args) => {
     try{
+      const { channel } = message.member.voice
       if (!channel) {
         message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
         return
