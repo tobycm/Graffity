@@ -5,8 +5,8 @@ module.exports = {
     category: "Music",
     aliases: ["p", "play"],
     cooldown: 4,
-    useage: "play <URL / TITLE>",
-    description: "PLays a song from youtube",
+    useage: "play <Link/tên nhạc>",
+    description: "Phát một bản nhạc từ youtube",
     run: async (client, message, args) => {
     try{
       const { channel } = message.member.voice

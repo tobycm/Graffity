@@ -6,9 +6,10 @@ module.exports = {
     aliases: ['skip'],
     cooldown: 4,
     useage: 'skip',
-    description: 'skip the current track',
+    description: 'Bỏ qua nhạc đang phát',
     run: async (client, message, args) => {
     try{
+      const { channel } = message.member.voice
         if (!channel) {
             message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
             return

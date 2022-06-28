@@ -6,9 +6,10 @@ module.exports = {
     aliases: ['stop'],
     cooldown: 4,
     useage: 'stop',
-    description: 'stop the current track',
+    description: 'Dừng phát nhạc',
     run: async (client, message, args) => {
     try{
+      const { channel } = message.member.voice
       if (!channel) {
         message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
         return
