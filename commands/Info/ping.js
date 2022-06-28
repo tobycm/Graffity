@@ -7,7 +7,7 @@ module.exports = {
     aliases: ["ping"],
     cooldown: 2,
     useage: "ping",
-    description: "Gives you information on how fast the Bot can respond to you",
+    description: "Thông tin API và bot",
     run: async (client, message, args, user, text, prefix) => {
     try{
       message.channel.send(new MessageEmbed()

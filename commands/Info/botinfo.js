@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['botinfo', 'bot4'],
     cooldown: 2,
     useage: "botinfo",
-    description: "Gives you information on how fast the Bot can respond to you",
+    description: "Thông tin về bot",
     run: async (client, message, args, user, text, prefix) => {
     try{
         const Auth = message.member
@@ -25,7 +25,7 @@ module.exports = {
         .addField("📑 Node", `\`${process.version}\``, true)
         .addField("📦 Bộ nhớ", `\`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}/ ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\``, true)
         .addField("⌛️ Uptime ", `${duration(client.uptime).map(i=>`\`${i}\``).join(", ")}`, true)
-        .addField("🧭 Phiên bản", `\`${ver}\``)
+        .addField("🧭 Phiên bản", `\`${ver}\``, true)
         .addField("👷🏼 Worker", `\`1\``, true)
         .setFooter(`Yêu cầu bởi ${Auth.user.tag}`, message.author.displayAvatarURL)
         )

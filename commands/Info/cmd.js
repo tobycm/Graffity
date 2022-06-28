@@ -6,8 +6,8 @@ module.exports = {
     category: "Info",
     aliases: ["commandinfo", 'cmd'],
     cooldown: 4,
-    useage: "help [Lệnh]",
-    description: "Returns all Commmands, or one specific command",
+    useage: "cmd [Lệnh]",
+    description: "Thông tin các lệnh",
     run: async (client, message, args, user, text, prefix) => {
       try{
         const input = args.join(' ')
@@ -29,11 +29,11 @@ module.exports = {
           else embed.addField("**Cooldown**", `\`1 Giây\``);
           if (cmd.usage) {
               embed.addField("**Cách dùng**", `\`${config.prefix}${cmd.usage}\``);
-              embed.setFooter("Kí hiệu: <> = required, [] = optional");
+              embed.setFooter("Kí hiệu: <> = bắt buộc, [] = tùy chọn");
           }
           if (cmd.useage) {
               embed.addField("**Cách dùng**", `\`${config.prefix}${cmd.useage}\``);
-              embed.setFooter("Kí hiệu: <> = required, [] = optional");
+              embed.setFooter("Kí hiệu: <> = bắt buộc, [] = tùy chọn");
           }
           return message.channel.send(embed.setColor(ee.main));
       }

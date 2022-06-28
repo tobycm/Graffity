@@ -2,7 +2,7 @@ const { readdirSync } = require("fs");
 const ascii = require("ascii-table");
 let table = new ascii("Commands");
 table.setHeading("Command", "Load status");
-console.log("Command handling connected!".yellow);
+console.log("✅ Command handling đã kết nối!".yellow);
 module.exports = (client) => {
   try{
     readdirSync("./commands/").forEach((dir) => {

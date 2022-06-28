@@ -9,7 +9,7 @@ module.exports = {
     description: 'Bỏ qua nhạc đang phát',
     run: async (client, message, args) => {
     try{
-        const { channel } = message.member.voice
+      const { channel } = message.member.voice
         if (!channel) {
             message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
             return
