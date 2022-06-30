@@ -37,7 +37,7 @@ module.exports = {
         .addField("Không thích", `:thumbsdown: ${track.dislikes}`,true)
         .addField("Thích", `:thumbsup: ${track.likes}`,true)
         .addField("Thời gian: ", createBar(track.duration*1000, client.distube.getQueue(message).currentTime))
-      ).then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+      )
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

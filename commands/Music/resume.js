@@ -29,7 +29,7 @@ module.exports = {
       if(client.distube.isPlaying(message)) {
         return message.channel.send(`**🚫 |** Nhạc không được tạm dừng, không thể unpause `)
       }
-      message.channel.send('**▶️ |** Tiếp tục bài hát 🎶').then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+      message.channel.send('**▶️ |** Tiếp tục bài hát 🎶')
 
       client.distube.resume(message);
       //those 4 lines with the delay, fixes the bug that it doesnt resume by repausing and reresuming ;)

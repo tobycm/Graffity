@@ -61,21 +61,21 @@ module.exports = {
         if (time.days) {
             let ret = time.days + ' Ngày'
             if (time.days !== 1) {
-                ret += 's'
+                ret += ''
             }
             parts.push(ret)
         }
         if (time.hours) {
             let ret = time.hours + ' Giờ'
             if (time.hours !== 1) {
-                ret += 's'
+                ret += ''
             }
             parts.push(ret)
         }
         if (time.minutes) {
             let ret = time.minutes + ' Phút'
             if (time.minutes !== 1) {
-                ret += 's'
+                ret += ''
             }
             parts.push(ret)
 
@@ -83,7 +83,7 @@ module.exports = {
         if (time.seconds) {
             let ret = time.seconds + ' Giây'
             if (time.seconds !== 1) {
-                ret += 's'
+                ret += ''
             }
             parts.push(ret)
         }

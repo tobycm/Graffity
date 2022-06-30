@@ -1,14 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
-const ee = require("../../config/embed.json");
-const { format } = require("../../handlers/functions")
+const config = require("../../../config/config.json");
+const ee = require("../../../config/embed.json");
+const { format } = require("../../../handlers/functions")
 module.exports = {
-    name: "autoplay",
+    name: "forward",
     category: "Music",
-    aliases: ["autoplay"],
+    aliases: ["fwd", 'forward'],
     cooldown: 4,
-    useage: "autoplay",
-    description: "Bật tắt tự động phát",
+    useage: "forward <giây>",
+    description: "Tua đi một khoảng thời gian nhất định",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
         const { channel } = message.member.voice
@@ -26,7 +26,24 @@ module.exports = {
             message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
             return
         }
-      message.channel.send(`**✅ |** Đã chuyển chế độ tự động phát thành: ${client.distube.toggleAutoplay(message) ? "ON" : "OFF"}`).then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+      if(!args[0])
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`**🚫 |** Xin hãy ghi số giây mà bạn muốn tua đi!`)
+          .setDescription(`Usage: \`${prefix}forward <số giây>\``)
+        )
+
+      let queue = client.distube.getQueue(message);
+      let seektime = queue.currentTime + Number(args[0]) * 1000;
+      if(seektime < 0)
+        seektime = queue.songs[0].duration * 1000;
+      if(seektime >= queue.songs[0].duration * 1000)
+        seektime = queue.songs[0].duration * 1000 - 1000;
+
+      client.distube.seek(message, seektime);
+
+      message.channel.send(`**⏩ |** Đã tua **${args[0]} giây** đến: **${format(seektime)}**`)
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

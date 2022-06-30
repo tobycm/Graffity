@@ -1,9 +1,51 @@
-const config = require("../../config/config.json"); //loading config file with token and prefix, and settings
 const ee = require("../../config/embed.json"); //Loading all embed settings like color footertext and icon ...
 const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
-const { escapeRegex} = require("../../handlers/functions"); //Loading all needed functions
+const { escapeRegex } = require("../../handlers/functions"); //Loading all needed functions
+const db = require('quick.db')
+
+const validatePermissions = (permissions) => {
+  const validPermissions = [
+    'CREATE_INSTANT_INVITE',
+    'KICK_MEMBERS',
+    'BAN_MEMBERS',
+    'ADMINISTRATOR',
+    'MANAGE_CHANNELS',
+    'MANAGE_GUILD',
+    'ADD_REACTIONS',
+    'VIEW_AUDIT_LOG',
+    'PRIORITY_SPEAKER',
+    'STREAM',
+    'VIEW_CHANNEL',
+    'SEND_MESSAGES',
+    'SEND_TTS_MESSAGES',
+    'MANAGE_MESSAGES',
+    'EMBED_LINKS',
+    'ATTACH_FILES',
+    'READ_MESSAGE_HISTORY',
+    'MENTION_EVERYONE',
+    'USE_EXTERNAL_EMOJIS',
+    'VIEW_GUILD_INSIGHTS',
+    'CONNECT',
+    'SPEAK',
+    'MUTE_MEMBERS',
+    'DEAFEN_MEMBERS',
+    'MOVE_MEMBERS',
+    'USE_VAD',
+    'CHANGE_NICKNAME',
+    'MANAGE_NICKNAMES',
+    'MANAGE_ROLES',
+    'MANAGE_WEBHOOKS',
+    'MANAGE_EMOJIS',
+  ]
+
+  for (const permission of permissions) {
+    if (!validPermissions.includes(permission)) {
+      throw new Error(`quyền không xác định: "${permission}"`)
+    }
+  }
+}
 //here the event starts
-module.exports = async (client, message) => {
+module.exports = async (client, message, commandOptions) => {
   try {
     //if the message is not in a guild (aka in dms), return aka ignore the inputs
     if (!message.guild) return;
@@ -14,9 +56,17 @@ module.exports = async (client, message) => {
     //if the message is on partial fetch it
     if (message.partial) await message.fetch();
     //get the current prefix from the botconfig/config.json
-    let prefix = config.prefix
-    //the prefix can be a Mention of the Bot / The defined Prefix of the Bot
-    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+    const { prefix } = require('../../config/config.json')
+    let sv_prefix = db.fetch(`prefix_${message.guild.id}`)
+    if(sv_prefix === null) sv_prefix = db.set(`prefix_${message.guild.id}`, prefix)
+    const prefixRegex = new RegExp(`^(<@!?>|${escapeRegex(sv_prefix)})\\s*`)
+
+    // reset prefix khẩn cấp
+    if (message.content === 'reset') {
+      message.react('✅')
+      db.set(`prefix_${message.guild.id}`, prefix)
+    }
+    
     //if its not that then return
     if (!prefixRegex.test(message.content)) return;
     //now define the right prefix either ping or not ping
@@ -59,7 +109,7 @@ module.exports = async (client, message) => {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //set a timeout function with the cooldown, so it gets deleted later on again
       try{
         //try to delete the message of the user who ran the cmd
-        try{  message.delete();   }catch{}
+        try{}catch{}
         //if Command has specific permission return error
         if(command.memberpermissions && !message.member.hasPermission(command.memberpermissions)) {
           return message.channel.send(new Discord.MessageEmbed()
@@ -98,7 +148,7 @@ module.exports = async (client, message) => {
     ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore".gray)));
   }catch (e){
     return message.channel.send(
-    new MessageEmbed()
+    new Discord.MessageEmbed()
     .setColor("RED")
     .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
     .setDescription(`\`\`\`${e.stack}\`\`\``)

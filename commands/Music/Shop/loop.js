@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
-const ee = require("../../config/embed.json");
+const config = require("../../../config/config.json");
+const ee = require("../../../config/embed.json");
 module.exports = {
     name: "loop",
     category: "Music",
@@ -45,7 +45,7 @@ module.exports = {
       }
       if( 0 <= loopstate && loopstate <= 2){
         client.distube.setRepeatMode(message, parseInt(loopstate));
-        message.channel.send(`**🔁 |** Chế độ lặp lại được chuyển thành: \`${loopstates[loopstate]}\``).then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+        message.channel.send(`**🔁 |** Chế độ lặp lại được chuyển thành: \`${loopstates[loopstate]}\``)
       }
       else{
         return message.channel.send(new MessageEmbed()

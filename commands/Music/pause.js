@@ -28,7 +28,7 @@ module.exports = {
       if(client.distube.isPaused(message)) {
         return message.channel.send('**🚫 |** Nhạc đã tạm dừng rồi')
       }
-      message.channel.send('**⏸ |** Đã tạm dừng nhạc!').then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+      message.channel.send('**⏸ |** Đã tạm dừng nhạc!')
 
       client.distube.pause(message);
     } catch (e) {

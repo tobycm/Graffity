@@ -1,13 +1,36 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
-const ee = require("../../config/embed.json");
+const config = require("../../../config/config.json");
+const ee = require("../../../config/embed.json");
+const filters = [
+  "clear",
+  "lowbass",
+  "bassboost",
+  "purebass",
+  "8D",
+  "vaporwave",
+  "nightcore",
+  "phaser",
+  "tremolo",
+  "vibrato",
+  "reverse",
+  "treble",
+  "normalizer",
+  "surrounding",
+  "pulsator",
+  "subboost",
+  "karaoke",
+  "flanger",
+  "gate",
+  "haas",
+  "mcompand"
+]
 module.exports = {
-    name: "shuffle",
+    name: "filter",
     category: "Music",
-    aliases: ["mix", 'shuffle'],
+    aliases: ["filter"],
     cooldown: 4,
-    useage: "shuffle",
-    description: "Xáo trộn nhạc tronh queue",
+    useage: "filter <tên filter>",
+    description: "Đổi filter cho bài hát",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
         const { channel } = message.member.voice
@@ -25,14 +48,22 @@ module.exports = {
             message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
             return
         }
+      if(!args[0])
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`**🚫 |** Xin hãy ghi tên filter`)
+          .setImage('https://media.discordapp.net/attachments/989398678093565965/991617234290094150/unknown.png')
+        );
+        if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
+          return message.channel.send(`**🚫 |** Filter này không tồn tại!`)
+      client.distube.setFilter(message, args[0]);
 
       message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext,ee.footericon)
-        .setTitle("**🔀 |** Đã xáo trộn nhạc trong Queue")
-      ).then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
-
-      client.distube.shuffle(message);
+        .setTitle(`**✅ |** Đã cài filter thành: \`${args[0]}\``)
+      )
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

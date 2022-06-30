@@ -1,36 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
-const ee = require("../../config/embed.json");
-const filters = [
-  "clear",
-  "lowbass",
-  "bassboost",
-  "purebass",
-  "8D",
-  "vaporwave",
-  "nightcore",
-  "phaser",
-  "tremolo",
-  "vibrato",
-  "reverse",
-  "treble",
-  "normalizer",
-  "surrounding",
-  "pulsator",
-  "subboost",
-  "karaoke",
-  "flanger",
-  "gate",
-  "haas",
-  "mcompand"
-]
+const config = require("../../../config/config.json");
+const ee = require("../../../config/embed.json");
+const { format } = require("../../../handlers/functions")
 module.exports = {
-    name: "filter",
+    name: "rewind",
     category: "Music",
-    aliases: ["filter"],
+    aliases: ["rew", 'rewind'],
     cooldown: 4,
-    useage: "filter <tên filter>",
-    description: "Đổi filter cho bài hát",
+    useage: "rewind <giây>",
+    description: "Tua lại bài hát một khoảng thời gian nhất định",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
         const { channel } = message.member.voice
@@ -52,18 +30,20 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`**🚫 |** Xin hãy ghi tên filter`)
-          .setImage('https://media.discordapp.net/attachments/989398678093565965/991617234290094150/unknown.png')
-        );
-        if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
-          return message.channel.send(`**🚫 |** Filter này không tồn tại!`)
-      client.distube.setFilter(message, args[0]);
+          .setTitle(`**🚫 |** Xin hãy ghi số giây mà bạn muốn tua lại!`)
+          .setDescription(`Usage: \`${prefix}rewind <số giây>\``)
+        )
 
-      message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext,ee.footericon)
-        .setTitle(`**✅ |** Đã cài filter thành: \`${args[0]}\``)
-      ).then(msg=>msg.delete({timeout: 4000}).catch(e=>console.log(e.message)))
+      let queue = client.distube.getQueue(message);
+      let seektime = queue.currentTime - Number(args[0]) * 1000;
+      if(seektime < 0)
+        seektime = 0;
+      if(seektime >= queue.songs[0].duration * 1000 - queue.currentTime)
+        seektime = 0;
+
+      client.distube.seek(message, seektime);
+
+      message.channel.send(`**⏪ |** Đã tua ngược **${args[0]} giây** đến: **${format(seektime)}**`)
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

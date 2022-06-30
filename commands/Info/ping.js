@@ -3,7 +3,7 @@ const config = require("../../config/config.json");
 const ee = require("../../config/embed.json");
 module.exports = {
     name: "ping",
-    category: "Information",
+    category: "Info",
     aliases: ["ping"],
     cooldown: 2,
     useage: "ping",
