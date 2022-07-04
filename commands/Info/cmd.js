@@ -17,7 +17,7 @@ module.exports = {
         }
         if (input) {
           const embed = new MessageEmbed();
-          const cmd = client.commands.get(args[0].toLowerCase()) || client.commands.get(client.aliases.get(args[0].toLowerCase()));
+          const cmd = client.commands.get(args[0].toLowerCase()) || client.commands.get(client.aliases.get(args[0].toLowerCase())) || client.commands.get(client.useage.get(args[0].toLowerCase()))
           if (!cmd) {
               return message.channel.send(embed.setColor(ee.wrongcolor).setDescription(`**🚫 |** Không tìm thấy thông tin của lệnh **${args[0].toLowerCase()}**`));
           }
@@ -25,16 +25,9 @@ module.exports = {
           if (cmd.name) embed.setTitle(`Thông tin lệnh :- \`${cmd.name}\``);
           if (cmd.description) embed.addField("**Mô tả**", `\`${cmd.description}\``);
           if (cmd.aliases) embed.addField("**Kiểu viết**", `\`${cmd.aliases.map((a) => `${a}`).join("`, `")}\``);
+          if (cmd.useage) embed.addField("**Cách dùng**", `\`${config.prefix}${cmd.useage.map((a) => `${a}`).join("`. `")}\``);
           if (cmd.cooldown) embed.addField("**Cooldown**", `\`${cmd.cooldown} Giây\``);
           else embed.addField("**Cooldown**", `\`1 Giây\``);
-          if (cmd.usage) {
-              embed.addField("**Cách dùng**", `\`${config.prefix}${cmd.usage}\``);
-              embed.setFooter("Kí hiệu: <> = bắt buộc, [] = tùy chọn");
-          }
-          if (cmd.useage) {
-              embed.addField("**Cách dùng**", `\`${config.prefix}${cmd.useage}\``);
-              embed.setFooter("Kí hiệu: <> = bắt buộc, [] = tùy chọn");
-          }
           return message.channel.send(embed.setColor(ee.main));
       }
     } catch (e) {

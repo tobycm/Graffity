@@ -19,6 +19,7 @@ module.exports = {
             .addField('Server Cộng đồng', '[Link Server](https://discord.gg/G94VjVadv8)')
             .setColor(ee.color)
             )
+            message.react('✅')
             return
         } catch (e) {
             console.log(String(e.stack).bgRed)

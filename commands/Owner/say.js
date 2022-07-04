@@ -16,6 +16,10 @@ module.exports = {
                 return
             }
             const Input = args.join(' ')
+            if (!Input) {
+                await message.reply('**🚫 |** Missing Input!')
+                return
+            }
             await message.delete()
             await message.channel.send(`${Input}`)
         } catch (e) {
