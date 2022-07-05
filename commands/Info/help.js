@@ -7,8 +7,8 @@ module.exports = {
     aliases: ['help'],
     cooldown: 2,
     usaege: 'help',
-    description: 'none',
-    run: (message, args, client, member) => {
+    description: 'Cho bạn trợ giúp về bot',
+    run: (client, message, args, member) => {
         try {
             member.send(new MessageEmbed()
             .setTitle('Cảm ơn vì đã sử dụng bot Graffity!')
