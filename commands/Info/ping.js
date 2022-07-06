@@ -18,8 +18,8 @@ module.exports = {
         msg.edit(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`🏓 Ping client là \`${Math.round(client.ws.ping)}ms\``)
-        );
+          .setTitle(`🏓 Ping Bot là \`${Math.floor((Date.now() - message.createdTimestamp) - 2 * Math.floor(client.ws.ping))} ms\`\n\n🏓 Ping API là \`${Math.floor(client.ws.ping)} ms\``)
+        )
       })
     } catch (e) {
         console.log(String(e.stack).bgRed)
