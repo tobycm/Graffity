@@ -53,17 +53,13 @@ module.exports = {
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`**🚫 |** Xin hãy ghi tên filter`)
-          .setImage('https://media.discordapp.net/attachments/989398678093565965/991617234290094150/unknown.png')
+          .setImage('https://cdn.discordapp.com/attachments/991962051066998784/994967061560295545/unknown.png')
         );
         if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
           return message.channel.send(`**🚫 |** Filter này không tồn tại!`)
       client.distube.setFilter(message, args[0]);
 
-      message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext,ee.footericon)
-        .setTitle(`**✅ |** Đã cài filter thành: \`${args[0]}\``)
-      )
+      message.channel.send(`**✅ |** Đã cài filter thành: \`${args[0]}\``)
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
