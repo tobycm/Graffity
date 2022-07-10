@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const ee = require("../../config/embed.json");
+const db = require('quick.db')
 module.exports = {
     name: 'stop',
     category: 'Music',
@@ -9,16 +10,21 @@ module.exports = {
     description: 'Dừng phát nhạc',
     run: async (client, message, args) => {
     try{
+      const { guild } = message
+      const langDB = await db.get(`lang_${guild.id}`)
+      let vietnamese
+      if (langDB) vietnamese = true
+      if (!langDB) vietnamese = false
       const { channel } = message.member.voice
       if (!channel) {
-        message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
+        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
         return
       }
-      if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-        message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
-        return
+      if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
+          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
+          return
       }
-      message.channel.send('**✅ |** Đã dừng phát nhạc!')
+      message.channel.send(`${vietnamese ? `**✅ |** Đã dừng phát nhạc!` : `**✅ |** Stopped the current track!`}`)
       client.distube.stop(message)
     } catch (e) {
         console.log(String(e.stack).bgRed)

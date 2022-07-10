@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
+const db = require('quick.db')
 const ee = require("../../config/embed.json");
 module.exports = {
     name: "ping",
@@ -8,8 +8,13 @@ module.exports = {
     cooldown: 2,
     useage: "ping",
     description: "Thông tin API và bot",
-    run: async (client, message, args, user, text, prefix) => {
+    run: (client, message, args, user, text, prefix) => {
     try{
+      const { guild } = message
+      const langDB = db.get(`lang_${guild.id}`)
+      let vietnamese
+      if (langDB) vietnamese = true
+      if (!langDB) vietnamese = false
       message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
@@ -18,7 +23,7 @@ module.exports = {
         msg.edit(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`🏓 Ping Bot là \`${Math.floor((Date.now() - message.createdTimestamp) - 2 * Math.floor(client.ws.ping))} ms\`\n\n🏓 Ping API là \`${Math.floor(client.ws.ping)} ms\``)
+          .setTitle(`${vietnamese ? `🏓 Ping Bot là \`${Math.floor((Date.now() - message.createdTimestamp) - 2 * Math.floor(client.ws.ping))} ms\`\n\n🏓 Ping API là \`${Math.floor(client.ws.ping)} ms\`` : `🏓 Bot'ping is \`${Math.floor((Date.now() - message.createdTimestamp) - 2 * Math.floor(client.ws.ping))} ms\`\n\n🏓 API's ping is \`${Math.floor(client.ws.ping)} ms\``}`)
         )
       })
     } catch (e) {

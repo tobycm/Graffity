@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
+const db = require('quick.db')
 const ee = require("../../config/embed.json");
 module.exports = {
     name: "shuffle",
@@ -10,23 +10,28 @@ module.exports = {
     description: "Xáo trộn nhạc tronh queue",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-        const { channel } = message.member.voice
-        if (!channel) {
-          message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
+      const { guild } = message
+      const langDB = await db.get(`lang_${guild.id}`)
+      let vietnamese
+      if (langDB) vietnamese = true
+      if (!langDB) vietnamese = false
+      const { channel } = message.member.voice
+      if (!channel) {
+        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
+        return
+      }
+      if(!client.distube.getQueue(message))
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
+      )
+      if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
+          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
           return
-        }
-        if(!client.distube.getQueue(message))
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`**🚫 |** Queue trống!`)
-        )
-        if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-            message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
-            return
-        }
+      }
 
-      message.channel.send('**🔀 |** Đã xáo trộn nhạc trong Queue')
+      message.channel.send(`${vietnamese ? `**🔀 |** Đã xáo trộn nhạc trong Queue` : `**🔀 |** Shuffled song in Queue`}`)
 
       client.distube.shuffle(message);
     } catch (e) {

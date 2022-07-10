@@ -44,10 +44,10 @@ module.exports = (client) => {
 
   // DisTube event listeners, more in the documentation page
   client.distube
-      .on("playSong", (message, queue, song) => message.channel.send(`<a:StatsLoading:915430394101379083> Đang phát **${song.name}** - \`${song.formattedDuration}\`\nYêu cầu bởi: ${song.user.tag}\n${status(queue)}`)
+      .on("playSong", (message, queue, song) => message.channel.send(`<a:nowplay:995571939986911294> Đang phát **${song.name}** - \`${song.formattedDuration}\`\nYêu cầu bởi: ${song.user.tag}\n${status(queue)}`)
       )
       .on("addSong", (message, queue, song) => message.channel.send(new MessageEmbed()
-          .setDescription("<a:verify:927494667367481354> Đã thêm **" + `[${song.name}](${song.url})` + "** vào Queue!")
+          .setDescription("<:radio:995576717571801108> Đã thêm **" + `[${song.name}](${song.url})` + "** vào Queue!")
           .setColor(ee.color)
           .addField("Thời lượng", `\`${song.formattedDuration}\``)
           .setThumbnail(song.thumbnail)
@@ -55,7 +55,7 @@ module.exports = (client) => {
         )
       )
       .on("playList", (message, queue, playlist, song) => message.channel.send(new MessageEmbed()
-            .setDescription("<a:StatsLoading:915430394101379083> Đang phát danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ]\``)
+            .setDescription("<a:nowplay:995571939986911294> Đang phát danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ]\``)
             .setColor(ee.color)
             .addField("Nhạc đang phát:", `[${song.name}](${song.url})`)
             .addField("Thời lượng", `\`${playlist.formattedDuration}\``)
@@ -64,7 +64,7 @@ module.exports = (client) => {
         )
       )
       .on("addList", (message, queue, playlist) => message.channel.send(new MessageEmbed()
-            .setDescription("<a:verify:927494667367481354> Đã thêm danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ] vào Queue!\``)
+            .setDescription("<:radio:995576717571801108> Đã thêm danh sách phát **" + `[${playlist.name}](${playlist.url})` + `** - \`[ ${playlist.songs.length} bài ] vào Queue!\``)
             .setColor(ee.color)
             .addField("Thời lượng", `\`${playlist.formattedDuration}\``)
             .setThumbnail(playlist.thumbnail.url)

@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
+const db = require('quick.db')
 const ee = require("../../config/embed.json");
 const filters = [
   "clear",
@@ -33,26 +33,31 @@ module.exports = {
     description: "Đổi filter cho bài hát",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-        const { channel } = message.member.voice
-        if (!channel) {
-          message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
+      const { guild } = message
+      const langDB = await db.get(`lang_${guild.id}`)
+      let vietnamese
+      if (langDB) vietnamese = true
+      if (!langDB) vietnamese = false
+      const { channel } = message.member.voice
+      if (!channel) {
+        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
+        return
+      }
+      if(!client.distube.getQueue(message))
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
+      )
+      if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
+          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
           return
-        }
-        if(!client.distube.getQueue(message))
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`**🚫 |** Queue trống!`)
-        )
-        if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-            message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
-            return
-        }
+      }
       if(!args[0])
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`**🚫 |** Xin hãy ghi tên filter`)
+          .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi tên filter` : `**🚫 |** Please enter filter name`}`)
           .setImage('https://media.discordapp.net/attachments/989398678093565965/991617234290094150/unknown.png')
         );
         if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
@@ -62,7 +67,7 @@ module.exports = {
       message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext,ee.footericon)
-        .setTitle(`**✅ |** Đã cài filter thành: \`${args[0]}\``)
+        .setTitle(`${vietnamese ? `**✅ |** Đã cài filter thành: \`${args[0]}\`` : `**✅ |** Set filter to: \`${args[0]}\``}`)
       )
     } catch (e) {
         console.log(String(e.stack).bgRed)

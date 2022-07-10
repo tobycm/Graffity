@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
+const db = require('quick.db')
 const ee = require("../../config/embed.json");
 const {delay} = require("../../handlers/functions")
 module.exports = {
@@ -11,25 +11,30 @@ module.exports = {
     description: "Tiếp tục bài hát đang dừng",
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-        const { channel } = message.member.voice
-        if (!channel) {
-          message.channel.send(`**🚫 |** Xin hãy vào một kênh thoại bất kì!`)
-          return
-        }
-        if(!client.distube.getQueue(message))
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`**🚫 |** Queue trống!`)
-        )
-        if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-            message.channel.send(`**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!`)
-            return
-        }
-      if(client.distube.isPlaying(message)) {
-        return message.channel.send(`**🚫 |** Nhạc không được tạm dừng, không thể unpause `)
+      const { guild } = message
+      const langDB = await db.get(`lang_${guild.id}`)
+      let vietnamese
+      if (langDB) vietnamese = true
+      if (!langDB) vietnamese = false
+      const { channel } = message.member.voice
+      if (!channel) {
+        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
+        return
       }
-      message.channel.send('**▶️ |** Tiếp tục bài hát 🎶')
+      if(!client.distube.getQueue(message))
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
+      )
+      if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
+          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
+          return
+      }
+      if(client.distube.isPlaying(message)) {
+        return message.channel.send(`${vietnamese ? `**🚫 |** Nhạc không được tạm dừng, không thể unpause` : `**🚫 |** It's not paused, so cant resume`}`)
+      }
+      message.channel.send(`${vietnamese ? `**▶️ |** Tiếp tục bài hát 🎶` : `**▶️ |** Resume the music 🎶`}`)
 
       client.distube.resume(message);
       //those 4 lines with the delay, fixes the bug that it doesnt resume by repausing and reresuming ;)
