@@ -58,7 +58,7 @@ module.exports = {
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi tên filter` : `**🚫 |** Please enter filter name`}`)
-          .setImage('https://media.discordapp.net/attachments/989398678093565965/991617234290094150/unknown.png')
+          .setImage('https://media.discordapp.net/attachments/965155548611899422/995933865854124132/unknown.png')
         );
         if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
           return message.channel.send(`**🚫 |** Filter này không tồn tại!`)

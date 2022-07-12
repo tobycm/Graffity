@@ -2,7 +2,7 @@ const { MessageEmbed, User } = require("discord.js");
 const { ownerid } = require("../../config/config.json");
 const ee = require("../../config/embed.json");
 module.exports = {
-    name: "autoplay",
+    name: "say",
     category: "Owner",
     aliases: ['say', 's'],
     cooldown: 1,

@@ -11,19 +11,26 @@ module.exports = {
     run: async(client, message, args) => {
         try {
             if (!message.member.hasPermission('ADMINISTRATOR' || 'MANAGE_GUILD')) {
-                await message.reply('**🚫 |** Bạn không có quyền để dùng lệnh này!')
+                await message.reply(`${vietnamese ? `**🚫 |** Bạn không có quyền để dùng lệnh này!` : `**🚫 |** You do not have permission to use this command!`}`)
                 return
             }
             const { guild } = message
             const input = args[0]
             if (!input) {
-                await message.reply('Missing Input')
+                await message.reply('**🚫 |** Hãy ghi ngôn ngữ! - Please enter the language!')
+                return
+            } else if (input !== 'vietnamese') {
+                await message.reply(`**🚫 |** english/vietnamese !`)
                 return
             } else if (input === 'vietnamese') {
                 db.set(`lang_${guild.id}`, true)
+            } else if (input !== 'english') {
+                await message.reply(`**🚫 |** english/vietnamese !`)
+                return
             } else if (input === 'english') {
                 db.set(`lang_${guild.id}`, false)
             }
+
             const langDB = await db.get(`lang_${guild.id}`)
             let vietnamese
             if (langDB) vietnamese = true

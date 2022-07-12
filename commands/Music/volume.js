@@ -35,14 +35,14 @@ module.exports = {
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi % thích hợp!` : `**🚫 |** Please enter the number of volume!`}`)
-          .setDescription(`Current volume: \`${client.distube.getQueue(message).volume}%\`\nUsage: \`${prefix}volume <0-200>\``)
+          .setDescription(`${vietnamese ? `Âm lượng hiện tại: \`${client.distube.getQueue(message).volume}%\`\nUsage: \`${prefix}volume <0-200>\`` : `Current Volume: \`${client.distube.getQueue(message).volume}%\`\nUsage: \`${prefix}volume <0-200>\``}`)
         );
 
       if(!(0 <= Number(args[0]) && Number(args[0]) <= 200))
-        return message.channel.send('**🚫 |** Âm lượng quá cao!')
+        return message.channel.send(`${vietnamese ? `**🚫 |** Âm lượng quá cao!` : `**🚫 |** Invalid number of volume!`}`)
 
         client.distube.setVolume(message, Number(args[0]));
-        return message.channel.send(`**🔊 |** Đã điều chỉnh âm lượng thành: \`${args[0]}%\``)
+        return message.channel.send(`${vietnamese ? `**🔊 |** Đã điều chỉnh âm lượng thành: \`${args[0]}%\`` : `**🔊 |** Changed the Volume to: \`${args[0]}%\``}`)
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

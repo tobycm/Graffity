@@ -11,16 +11,21 @@ module.exports = {
     description: "Đổi prefix của bot",
     run: async (client, message, args, user, text, prefix) => {
     try{
+        const { guild } = message
+        const langDB = db.get(`lang_${guild.id}`)
+        let vietnamese
+        if (langDB) vietnamese = true
+        if (!langDB) vietnamese = false
         if (!message.member.hasPermission('ADMINISTRATOR')) {
-            message.reply('**🚫 |** Bạn không có quyền để dùng lệnh này!')
+            message.reply(`${vietnamese ? `**🚫 |** Bạn không có quyền để dùng lệnh này!` : `**🚫 |** You do not have permission to use this command!`}`)
             return
         }
         const newprefix = args[0] 
-        if(!newprefix) return message.reply('**🚫 |** Bạn muốn chuyển prefix thành ký hiệu gì?') 
+        if(!newprefix) return message.reply(`${vietnamese ? `**🚫 |** Bạn muốn chuyển prefix thành ký hiệu gì?` : `**🚫 |** What symbol do you want to convert the prefix to?`}`) 
         else if(newprefix.length > 3) return message.reply('**🚫 |** uh ho.. prefix dài quá (ít nhất là 3 chữ cái)') 
         else {
-            message.reply(`**✅ |** Prefix đã chuyển thành: \`${newprefix}\``)
-            message.channel.send('```Trong trường hợp bị quên prefix, hãy liên hệ ngay\nvới Kravon Lidan#0378 để khắc phục!```')
+            message.reply(`${vietnamese ? `**✅ |** Prefix đã chuyển thành: \`${newprefix}\`` : `**✅ |** Prefix changed to: \`${newprefix}\``}`)
+            message.channel.send(`${vietnamese ? `\`\`\`Trong trường hợp bị quên prefix, hãy liên hệ ngay\nvới Kravon Lidan#0378 để khắc phục!\`\`\`` : `\`\`\`If you forgot the prefix, please contact\nwith Kravon Lidan#0378 to fix!\`\`\``}`)
             db.set(`prefix_${message.guild.id}`, newprefix) 
         }
     } catch (e) {

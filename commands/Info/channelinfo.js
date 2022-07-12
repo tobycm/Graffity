@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const config = require("../../config/config.json");
+const db = require('quick.db')
 const ee = require("../../config/embed.json");
 module.exports = {
     name: "channelinfo",
@@ -10,14 +10,19 @@ module.exports = {
     description: "Thông tin về kênh được dùng lệnh",
     run: async (client, message, args, user, text, prefix) => {
     try{
+        const { guild } = message
+        const langDB = db.get(`lang_${guild.id}`)
+        let vietnamese
+        if (langDB) vietnamese = true
+        if (!langDB) vietnamese = false
         const Input = message.mentions.channels.first()
         if (!Input) {
-            message.reply('**🚫 |** Hãy mention kênh!')
+            message.reply(`${vietnamese ? `**🚫 |** Hãy mention kênh!` : `**🚫 |** Please mention a channel!`}`)
             return
         }
         message.channel.send(new MessageEmbed()
-        .setTitle(`Thông tin về kênh - \`${Input.name}\``)
-        .setDescription(`**ID kênh**: \`${Input.id}\`\n**Tên kênh**: \`${Input.name}\`\n**Loại kênh**: \`${Input.type}\`\n**Thứ tự kênh**: \`${Input.rawPosition}\`\n**Mô tả**: \`${Input.topic}\`\n**NSFW**: \`${Input.nsfw}\``)
+        .setTitle(`${vietnamese ? `Thông tin về kênh - \`${Input.name}\`` : `Information of channel - \`${Input.name}\``}`)
+        .setDescription(`${vietnamese ? `**ID kênh**: \`${Input.id}\`\n**Tên kênh**: \`${Input.name}\`\n**Loại kênh**: \`${Input.type}\`\n**Thứ tự kênh**: \`${Input.rawPosition}\`\n**Mô tả**: \`${Input.topic}\`\n**NSFW**: \`${Input.nsfw}\`` : `**ID**: \`${Input.id}\`\n**Name**: \`${Input.name}\`\n**Type**: \`${Input.type}\`\n**Raw**: \`${Input.rawPosition}\`\n**Topic**: \`${Input.topic}\`\n**NSFW**: \`${Input.nsfw}\``}`)
         .setColor(ee.color)
         )
     } catch (e) {

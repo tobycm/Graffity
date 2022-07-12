@@ -8,7 +8,7 @@ const { inspect } = require(`util`)
 module.exports = {
     name: 'eval',
     category: 'Owner',
-    aliases: ['setwarn'],
+    aliases: ['eval'],
     cooldown: 2,
     usaege: 'None',
     description: 'None',
