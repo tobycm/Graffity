@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js")
 const db = require('quick.db')
 const ee = require("../../config/embed.json")
+const { stripIndent } = require('common-tags')
 module.exports = {
     name: 'help',
     category: 'Info',
@@ -29,7 +30,23 @@ module.exports = {
             const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id
             const collected = message.createReactionCollector(filter, { time: 900000, dispose: true })
             collected.on('collect', () => {
-                message.channel.send('bruh')
+                const commands = (category) => {
+                    return client.commands
+                    .filter(cmd => cmd.category === category)
+                    .map(cmd => `\`${cmd.name}\``)
+                    .join(', ')
+                }
+
+                const Embed = new MessageEmbed()
+                .setTitle(`HELP <a:917925228217270303:974903523818995712> COMMAND <a:917925228217270303:974903523818995712> BOARD`)
+                .setDescription(`${vietnamese ? `Prefix của bot là \`g-\`\nTổng lệnh: \`${client.commands.size}\`\nDùng \`g-cmd <tên lệnh>\` để tìm hiểu thêm` : `Prefix of bot is \`g-\`\nTotal command: \`${client.command.size}\`\nUse \`g-cmd <command name>\` to know how to use them`}`)
+                .setColor(ee.color)
+
+                const info = client.categories
+                .map(cat => stripIndent`**${cat[0].toUpperCase() + cat.slice(1)}** \n${commands(cat)}`)
+                .reduce((string, category) => string + `\n` + category)
+
+                return message.channel.send(Embed.setDescription(info))
             })
             return
         } catch (e) {
