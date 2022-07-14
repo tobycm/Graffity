@@ -14,6 +14,7 @@
     "colors": "^1.4.0",
     "common-tags": "^1.8.2",
     "cpu-stat": "^2.0.1",
+    "discord-buttons": "^2.4.1",
     "discord.js": "^12.5.1",
     "distube": "^2.8.9",
     "ffmpeg-static": "^4.2.7",

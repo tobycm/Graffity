@@ -15,18 +15,16 @@ module.exports = {
                 return
             }
             const { guild } = message
+            let lang = ['vietnamese', 'english']
             const input = args[0]
             if (!input) {
                 await message.reply('**🚫 |** Hãy ghi ngôn ngữ! - Please enter the language!')
                 return
-            } else if (input !== 'vietnamese') {
+            } else if (isNaN(parseInt(lang))) {
                 await message.reply(`**🚫 |** english/vietnamese !`)
                 return
             } else if (input === 'vietnamese') {
                 db.set(`lang_${guild.id}`, true)
-            } else if (input !== 'english') {
-                await message.reply(`**🚫 |** english/vietnamese !`)
-                return
             } else if (input === 'english') {
                 db.set(`lang_${guild.id}`, false)
             }
