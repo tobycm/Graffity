@@ -21,7 +21,7 @@ module.exports = {
         return
       }
       if (!client.distube.getQueue(message)) {
-        return message.channel.send(new MessageEmbed()
+        return message.channel.send(new Discord.MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
