@@ -3,9 +3,7 @@ const db = require('quick.db')
 const ee = require("../../config/embed.json");
 const filters = [
   "clear",
-  "lowbass",
   "bassboost",
-  "purebass",
   "8D",
   "vaporwave",
   "nightcore",
@@ -53,21 +51,22 @@ module.exports = {
           message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
           return
       }
-      if(!args[0])
+      const Input = args[0]
+      if (!filters.includes(Input)) return message.reply(`${vietnamese ? `**🚫 |** Filter này không tồn tại!` : `**🚫 |** Please enter valid filter name!`}`)
+      if(!Input)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi tên filter` : `**🚫 |** Please enter filter name`}`)
-          .setImage('https://media.discordapp.net/attachments/965155548611899422/995933865854124132/unknown.png')
-        );
-        if(!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
-          return message.channel.send(`**🚫 |** Filter này không tồn tại!`)
-      client.distube.setFilter(message, args[0]);
+          .setImage('https://media.discordapp.net/attachments/965155548611899422/997489122711191643/unknown.png')
+        )
+
+      client.distube.setFilter(message, Input);
 
       message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext,ee.footericon)
-        .setTitle(`${vietnamese ? `**✅ |** Đã cài filter thành: \`${args[0]}\`` : `**✅ |** Set filter to: \`${args[0]}\``}`)
+        .setTitle(`${vietnamese ? `**✅ |** Đã cài filter thành: \`${Input}\`` : `**✅ |** Set filter to: \`${Input}\``}`)
       )
     } catch (e) {
         console.log(String(e.stack).bgRed)

@@ -2,6 +2,7 @@
     "token": "OTg5NzM5MTg0OTI1MzQzODA0.GAVp7Q.6KUw-KOsat7Zf7GDxFq2mu2lQLmQrY-L_tsUO0",
     "prefix": "g-",
     "ownerid": "867741983774212166",
-    "bannedUserid": "",
-    "ver": "1.0.4"
+    "bannedUserid": [""],
+    "ver": "1.0.5",
+    "ecn": "<:ZapPoint:997132282739564555>"
 }

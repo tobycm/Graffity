@@ -1,4 +1,4 @@
-const Distube = require("distube");
+const Distube = require('distube');
 const ee = require("../config/embed.json");
 const config = require("../config/config.json");
 const { MessageEmbed } = require("discord.js");
@@ -9,8 +9,8 @@ module.exports = (client) => {
     searchSongs: false,
     emitNewSongOnly: false,
     highWaterMark: 1024*1024*64,
-    leaveOnEmpty: true,
-    leaveOnFinish: true,
+    leaveOnEmpty: false,
+    leaveOnFinish: false,
     leaveOnStop: true,
     // youtubeCookie --> prevents ERRORCODE: "429"
     youtubeDL: true,

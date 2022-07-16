@@ -20,7 +20,7 @@ module.exports = {
             if (!input) {
                 await message.reply('**🚫 |** Hãy ghi ngôn ngữ! - Please enter the language!')
                 return
-            } else if (isNaN(parseInt(lang))) {
+            } else if (!lang.includes(input)) {
                 await message.reply(`**🚫 |** english/vietnamese !`)
                 return
             } else if (input === 'vietnamese') {
