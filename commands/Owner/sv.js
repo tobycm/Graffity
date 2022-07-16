@@ -15,6 +15,7 @@ module.exports = {
                 await message.reply('**🚫 |** Bạn không phải owner của bot!')
                 return
             }
+
             const sv = client.guilds.cache
             .sort((a, b) => b.memberCount - a.memberCount)
             .map(r => r)
