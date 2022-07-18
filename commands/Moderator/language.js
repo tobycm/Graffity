@@ -10,11 +10,16 @@ module.exports = {
     description: 'Thay đổi ngôn ngữ',
     run: async(client, message, args) => {
         try {
+            const { guild } = message
+            const langDB = await db.get(`lang_${guild.id}`)
+            let vietnamese
+            if (langDB) vietnamese = true
+            if (!langDB) vietnamese = false
             if (!message.member.hasPermission('ADMINISTRATOR' || 'MANAGE_GUILD')) {
                 await message.reply(`${vietnamese ? `**🚫 |** Bạn không có quyền để dùng lệnh này!` : `**🚫 |** You do not have permission to use this command!`}`)
                 return
             }
-            const { guild } = message
+            
             let lang = ['vietnamese', 'english']
             const input = args[0]
             if (!input) {
@@ -28,11 +33,6 @@ module.exports = {
             } else if (input === 'english') {
                 db.set(`lang_${guild.id}`, false)
             }
-
-            const langDB = await db.get(`lang_${guild.id}`)
-            let vietnamese
-            if (langDB) vietnamese = true
-            if (!langDB) vietnamese = false
 
             await message.channel.send(`${vietnamese ? '**:flag_vn: |** Đã chuyển ngôn ngữ thành Tiếng Việt' : '**:flag_gb: |** Language changed to English'}`)
         } catch (e) {

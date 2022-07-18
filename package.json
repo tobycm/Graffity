@@ -12,6 +12,7 @@
     "@discordjs/opus": "^0.4.0",
     "@discordjs/voice": "^0.8.0",
     "ascii-table": "^0.0.9",
+    "captcha-canvas": "^3.0.4",
     "colors": "^1.4.0",
     "common-tags": "^1.8.2",
     "cpu-stat": "^2.0.1",

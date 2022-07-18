@@ -1,7 +1,7 @@
 const weather = require('weather-js');
 const db = require('quick.db')
 const Discord = require('discord.js');
-
+const ee = require('../../config/embed.json')
 module.exports = {
     name: 'weather',
     category: 'Info',
@@ -29,6 +29,7 @@ module.exports = {
                 .setAuthor(`${vietnamese ? `Thông tin thời tiết ở ${current.observationpoint}` : `Weather information at ${current.observationpoint}`}`)
                 .setThumbnail(current.imageUrl)
                 .setDescription(`**${current.skytext}**`)
+                .setColor(ee.color)
                 .addField(`${vietnamese ? `Múi giờ` : `Timezone`}`, `UTC ${location.timezone}`, true)
                 .addField(`${vietnamese ? `Loại nhiệt độ` : `Temperature type`}`, `${vietnamese ? `Độ C` : `°C`}`, true)
                 .addField(`${vietnamese ? `Nhiệt độ` : `Temperature`}`, `${current.temperature}°C`, true) 

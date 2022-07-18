@@ -14,7 +14,8 @@ const client = new Discord.Client({
   restWsBridgetimeout: 100,
   disableEveryone: true,
   partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'CHANNEL', 'GUILD_MEMBER'],
-});
+})
+require('discord-buttons')(client)
 
 client.commands = new Discord.Collection()
 client.aliases = new Discord.Collection()
