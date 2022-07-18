@@ -9,8 +9,8 @@ module.exports = (client) => {
     searchSongs: false,
     emitNewSongOnly: false,
     highWaterMark: 1024*1024*64,
-    leaveOnEmpty: false,
-    leaveOnFinish: false,
+    leaveOnEmpty: true,
+    leaveOnFinish: true,
     leaveOnStop: true,
     // youtubeCookie --> prevents ERRORCODE: "429"
     youtubeDL: true,

@@ -33,6 +33,8 @@ client.on('message', message => {
   }
 })
 
+
+
 var arr = ["command", "events", "distube-handler"]
 arr.forEach(handler => require(`./handlers/${handler}`)(client))
 console.log(`✅ Kết nối với quick.db thành công!`.green)
