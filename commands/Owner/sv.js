@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 2,
     usaege: 'None',
     description: 'None',
-    run: async (client, message, args) => {
+    run: async (client, message, member, args) => {
         try {
             let Userid = message.author.id
             if (Userid !== ownerid) {
@@ -19,10 +19,10 @@ module.exports = {
             .sort((a, b) => b.memberCount - a.memberCount)
             .map(r => r)
             .map((r, i) => `**${i + 1}** - \`${r.name}\` | **__${r.memberCount}__** Members\nID - \`${r.id}\``)
-            .slice(0, 10)
+            .slice(0, 40)
             .join("\n")
 
-            await message.channel.send(new MessageEmbed()
+            await member.send(new MessageEmbed()
             .setDescription(`${sv}\n`)
             )
         } catch (e) {
