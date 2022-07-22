@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 2,
     usaege: 'None',
     description: 'None',
-    run: async (client, message, member, args) => {
+    run: async (client, message, args, member) => {
         try {
             let Userid = message.author.id
             if (Userid !== ownerid) {
