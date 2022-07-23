@@ -3,7 +3,6 @@ const colors = require("colors")
 const fs = require("fs")
 const ee = require('./config/embed.json')
 const db = require('quick.db')
-
 const client = new Discord.Client({
   intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_BANS', 'GUILD_VOICE_STATES', 'GUILD_MEMBERS', 'GUILD_EMOJIS_AND_STICKERS',
 'GUILD_INTEGRATIONS', 'GUILD_PRESENCES', 'DIRECT_MESSAGES'],
@@ -32,8 +31,6 @@ client.on('message', message => {
     message.channel.send(Embed)
   }
 })
-
-
 
 var arr = ["command", "events", "distube-handler"]
 arr.forEach(handler => require(`./handlers/${handler}`)(client))
