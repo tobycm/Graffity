@@ -63,7 +63,7 @@ module.exports = {
             try {
                 const response = await msg.channel.awaitMessages( filter, {
                     max: 1,
-                    time: 134000,
+                    time: 189000,
                     errors: ['time']
                 })
 
