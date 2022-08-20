@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js")
 const db = require('quick.db')
-const ee = require("../../config/embed.json");
+const ee = require("../../config/embed.json")
 const { format } = require("../../handlers/functions")
 module.exports = {
     name: "forward",
@@ -18,45 +18,43 @@ module.exports = {
       if (!langDB) vietnamese = false
       const { channel } = message.member.voice
       if (!channel) {
-        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
+        message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy vào một kênh thoại bất kì!` : `**<:cyber_failed:1002595191082983464> |** Please join a voice first!`}`)
         return
       }
-      if(!client.distube.getQueue(message))
-      return message.channel.send(new MessageEmbed()
+      if(!client.distube.getQueue(message)) {
+        const Empty = new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
-      )
+        .setTitle(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Queue trống!` : `**<:cyber_failed:1002595191082983464> |** Queue is empty!`}`)
+
+      return message.channel.send({embeds:[Empty]})
+      }
       if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
+          message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**<:cyber_failed:1002595191082983464> |** Please join **my voice** first!`}`)
           return
       }
-      if(!args[0])
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi số giây mà bạn muốn tua đi!` : `**🚫 |** Please enter the number of seconds you want to forward!`}`)
-          .setDescription(`${vietnamese ? `Usage: \`${prefix}forward <số giây>\`` : `Usage: \`${prefix}forward <seconds>\``}`)
-        )
+      const Int = Number(args[0])
+      if(!Int) return message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy ghi số giây mà bạn muốn tua đi!` : `**<:cyber_failed:1002595191082983464> |** Please enter the number of seconds you want to forward!`}`)
 
-      let queue = client.distube.getQueue(message);
-      let seektime = queue.currentTime + Number(args[0]) * 1000;
+      if (isNaN(Int)) return message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy nhập số giây hợp lệ!` : `**<:cyber_failed:1002595191082983464> |** Please enter a valid number!`}`)
+
+      let queue = client.distube.getQueue(message)
+      let seektime = queue.currentTime + Int * 1000
       if(seektime < 0)
-        seektime = queue.songs[0].duration * 1000;
+        seektime = queue.songs[0].duration * 1000
       if(seektime >= queue.songs[0].duration * 1000)
-        seektime = queue.songs[0].duration * 1000 - 1000;
+        seektime = queue.songs[0].duration * 1000 - 1000
+      queue.seek(Int)
 
-      client.distube.seek(message, seektime);
-
-      message.channel.send(`${vietnamese ? `**⏩ |** Đã tua **${args[0]} giây** đến: **${format(seektime)}**` : `**⏩ |** Forwarded **${args[0]} seconds** to: **${format(seektime)}**`}`)
+      message.channel.send(`${vietnamese ? `**⏩ |** Đã tua đi **${Int} giây**` : `**⏩ |** Forwarded **${Int} seconds**`}`)
     } catch (e) {
         console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
-        );
+        const Err = new MessageEmbed()
+.setColor(ee.wrongcolor)
+.setFooter(ee.footertext, ee.footericon)
+.setTitle(`**<:warning:1001866544797716511> |** Ôi hỏng rồi | đã xảy ra lỗi!`)
+.setDescription(`\`\`\`${e.stack}\`\`\``)
+return message.channel.send({embeds:[Err]})
     }
   }
 }

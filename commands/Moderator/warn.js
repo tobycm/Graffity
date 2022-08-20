@@ -6,7 +6,7 @@ module.exports = {
     category: 'Moderator',
     aliases: ['warn'],
     cooldown: 2,
-    usaege: 'warn <member> <lí do>',
+    useage: 'warn <member> <lí do>',
     description: 'warn một người dùng',
     run: async(message, args, client) => {
         try {
@@ -15,34 +15,42 @@ module.exports = {
             let vietnamese
             if (langDB) vietnamese = true
             if (!langDB) vietnamese = false
-            if (!message.member.hasPermission('KICK_MEMBERS' || 'BAN_MEMBERS' || 'ADMINISTRATOR' || 'MANAGE_GUILD')) {
-                message.reply(`${vietnamese ? `**🚫 |** Bạn không có quyền để dùng lệnh này!` : `**🚫 |** You do not have permission to use this command!`}`)
+
+            const { ownerid } = require('../../config/config.json')
+            let Userid = message.author.id
+            if (Userid !== ownerid) {
+                await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
+                return
+            }
+            if (!message.member.permissions.has('KICK_MEMBERS' || 'BAN_MEMBERS' || 'ADMINISTRATOR' || 'MANAGE_GUILD')) {
+                message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Bạn không có quyền để dùng lệnh này!` : `**<:cyber_failed:1002595191082983464> |** You do not have permission to use this command!`}`)
                 return
             }
             const Member = message.mentions.members.first()
             const reason = args.slice(1).join(' ')
             if (!Member) {
-                message.reply(`${vietnamese ? `**🚫 |** Hãy mention ai đó!` : `**🚫 |** Please mention someone!`}`)
+                message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Hãy mention ai đó!` : `**<:cyber_failed:1002595191082983464> |** Please mention someone!`}`)
                 return
             }
             if (!reason) {
-                message.reply(`${vietnamese ? `**🚫 |** Hãy ghi lí do!` : `**🚫 |** Please enter the reason!`}`)
+                message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Hãy ghi lí do!` : `**<:cyber_failed:1002595191082983464> |** Please enter the reason!`}`)
                 return
             }
             if (Member.roles.highest.position > message.guild.members.resolve(client.user).roles.highest.position) {
-                message.channel.send(`${vietnamese ? `**❌ |** Không thể warn ${Member} vì role tích hợp của bot quá thấp! g-help để xem cách khắc phục` : `**❌ |** Can't warn ${Member} because the built-in role of the bot is too low! g-help to get the help`}`)
+                message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Không thể warn ${Member} vì role tích hợp của bot quá thấp! g-help để xem cách khắc phục` : `**<:cyber_failed:1002595191082983464> |** Can't warn ${Member} because the built-in role of the bot is too low! g-help to get the help`}`)
                 return
             }
             Member.send(`${vietnamese ? `Bạn đã bị warn từ server \`${message.guild.name}\` vì **${reason}**` : `You have been warned from the server \`${message.guild.name}\` because **${reason}**`}`)
-            message.channel.send(`${vietnamese ? `**✅ |** Đã warn ${Member} vì ${reason}` : `**✅ |** Warned ${Member} because ${reason}`}`)
+            message.channel.send(`${vietnamese ? `**<:cyber_success:1002595116164317204> |** Đã warn ${Member} vì ${reason}` : `**<:cyber_success:1002595116164317204> |** Warned ${Member} because ${reason}`}`)
         } catch (e) {
             console.log(String(e.stack).bgRed)
-            return message.channel.send(new Discord.MessageEmbed()
-                .setColor(ee.wrongcolor)
-                .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
-                .setDescription(`\`\`\`${e.stack}\`\`\``)
-            )
+            const Err = new Discord.MessageEmbed()
+.setColor(ee.wrongcolor)
+.setFooter(ee.footertext, ee.footericon)
+.setTitle(`**<:warning:1001866544797716511> |** Ôi hỏng rồi | đã xảy ra lỗi!`)
+.setDescription(`\`\`\`${e.stack}\`\`\``)
+return message.channel.send({embeds:[Err]})
+            
         }
     }
 }

@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js")
 const db = require('quick.db')
-const ee = require("../../config/embed.json");
+const ee = require("../../config/embed.json")
 module.exports = {
     name: "channelinfo",
     category: "Info",
@@ -17,22 +17,23 @@ module.exports = {
         if (!langDB) vietnamese = false
         const Input = message.mentions.channels.first()
         if (!Input) {
-            message.reply(`${vietnamese ? `**🚫 |** Hãy mention kênh!` : `**🚫 |** Please mention a channel!`}`)
+            message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Hãy mention kênh!` : `**<:cyber_failed:1002595191082983464> |** Please mention a channel!`}`)
             return
         }
-        message.channel.send(new MessageEmbed()
+
+        const Embed1 = new MessageEmbed()
         .setTitle(`${vietnamese ? `Thông tin về kênh - \`${Input.name}\`` : `Information of channel - \`${Input.name}\``}`)
-        .setDescription(`${vietnamese ? `**ID kênh**: \`${Input.id}\`\n**Tên kênh**: \`${Input.name}\`\n**Loại kênh**: \`${Input.type}\`\n**Thứ tự kênh**: \`${Input.rawPosition}\`\n**Mô tả**: \`${Input.topic}\`\n**NSFW**: \`${Input.nsfw}\`` : `**ID**: \`${Input.id}\`\n**Name**: \`${Input.name}\`\n**Type**: \`${Input.type}\`\n**Raw**: \`${Input.rawPosition}\`\n**Topic**: \`${Input.topic}\`\n**NSFW**: \`${Input.nsfw}\``}`)
+        .setDescription(`${vietnamese ? `**ID kênh**: \`${Input.id}\`\n**Tên kênh**: \`${Input.name}\`\n**Loại kênh**: \`${Input.type.replace('GUILD_', '')}\`\n**Thứ tự kênh**: \`${Input.rawPosition}\`\n**Mô tả**: \`${Input.topic ? `${Input.topic}` : `Không có nội dung`}\`\n**NSFW**: \`${Input.nsfw ? `Là kênh nsfw` : `Không phải kênh nsfw`}\`` : `**ID**: \`${Input.id}\`\n**Name**: \`${Input.name}\`\n**Type**: \`${Input.type.replace('GUILD_', '')}\`\n**Raw**: \`${Input.rawPosition}\`\n**Topic**: \`${Input.topic ? `${Input.topic}` : `No topic`}\`\n**NSFW**: \`${Input.nsfw ? `This is nsfw channel` : `This is NOT nsfw channel`}\``}`)
         .setColor(ee.color)
-        )
+        message.channel.send({embeds:[Embed1]})
     } catch (e) {
         console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
-        );
+        const Err = new Discord.MessageEmbed()
+.setColor(ee.wrongcolor)
+.setFooter(ee.footertext, ee.footericon)
+.setTitle(`**<:warning:1001866544797716511> |** Ôi hỏng rồi | đã xảy ra lỗi!`)
+.setDescription(`\`\`\`${e.stack}\`\`\``)
+return message.channel.send({embeds:[Err]})
     }
   }
 }

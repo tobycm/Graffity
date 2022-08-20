@@ -1,6 +1,6 @@
-const weather = require('weather-js');
+const weather = require('weather-js')
 const db = require('quick.db')
-const Discord = require('discord.js');
+const Discord = require('discord.js')
 const ee = require('../../config/embed.json')
 module.exports = {
     name: 'weather',
@@ -17,15 +17,15 @@ module.exports = {
             if (langDB) vietnamese = true
             if (!langDB) vietnamese = false
             weather.find({search: args.join(" "), degreeType: `C`}, function (error, result) {
-                if(error) return message.channel.send(error);
-                if(!args[0]) return message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy ghi nơi!` : `**🚫 |** Please enter the location`}`)
+                
+                if(!args[0]) return message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy ghi nơi!` : `**<:cyber_failed:1002595191082983464> |** Please enter the location`}`)
     
-                if(result === undefined || result.length === 0) return message.reply(`${vietnamese ? `**🚫 |** Vị trí không tồn tại!` : `**🚫 |** This location is invalid!`}`)
+                if(result === undefined || result.length === 0) return message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Vị trí không tồn tại!` : `**<:cyber_failed:1002595191082983464> |** This location is invalid!`}`)
     
-                var current = result[0].current;
-                var location = result[0].location;
+                var current = result[0].current
+                var location = result[0].location
     
-                message.channel.send(new Discord.MessageEmbed()
+                const Embed1 = new Discord.MessageEmbed()
                 .setAuthor(`${vietnamese ? `Thông tin thời tiết ở ${current.observationpoint}` : `Weather information at ${current.observationpoint}`}`)
                 .setThumbnail(current.imageUrl)
                 .setDescription(`**${current.skytext}**`)
@@ -36,14 +36,15 @@ module.exports = {
                 .addField(`${vietnamese ? `Tốc độ gió` : `Wind speed`}`, `${current.winddisplay}`, true)
                 .addField(`${vietnamese ? `Cảm giác như` : `Feels like`}`, `${current.feelslike}°C`, true)
                 .addField(`${vietnamese ? `Độ ẩm` : `Humidity`}`, `${current.humidity}%`, true)
-                )
+                
+                message.channel.send({embeds:[Embed1]})
             })
         } catch (e) {
             console.log(String(e.stack).bgRed)
             return message.channel.send(new Discord.MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
+            .setTitle(`**<:warning:1001866544797716511> |** Ôi hỏng rồi | đã xảy ra lỗi!`)
             .setDescription(`\`\`\`${e.stack}\`\`\``)
             )
         }

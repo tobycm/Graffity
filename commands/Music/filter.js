@@ -1,26 +1,22 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js")
 const db = require('quick.db')
-const ee = require("../../config/embed.json");
+const ee = require("../../config/embed.json")
 const filters = [
-  "clear",
+  "3d",
   "bassboost",
-  "8D",
-  "vaporwave",
-  "nightcore",
-  "phaser",
-  "tremolo",
-  "vibrato",
-  "reverse",
-  "treble",
-  "normalizer",
-  "surrounding",
-  "pulsator",
-  "subboost",
+  "echo",
   "karaoke",
+  "nightcore",
+  "vaporwave",
   "flanger",
   "gate",
   "haas",
-  "mcompand"
+  "reverse",
+  "surround",
+  "mcompand",
+  "phaser",
+  "tremolo",
+  "earwax"
 ]
 module.exports = {
     name: "filter",
@@ -38,44 +34,46 @@ module.exports = {
       if (!langDB) vietnamese = false
       const { channel } = message.member.voice
       if (!channel) {
-        message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào một kênh thoại bất kì!` : `**🚫 |** Please join a voice first!`}`)
+        message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy vào một kênh thoại bất kì!` : `**<:cyber_failed:1002595191082983464> |** Please join a voice first!`}`)
         return
       }
-      if(!client.distube.getQueue(message))
-      return message.channel.send(new MessageEmbed()
+      if(!client.distube.getQueue(message)) {
+        const Empty = new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${vietnamese ? `**🚫 |** Queue trống!` : `**🚫 |** Queue is empty!`}`)
-      )
+        .setTitle(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Queue trống!` : `**<:cyber_failed:1002595191082983464> |** Queue is empty!`}`)
+
+      return message.channel.send({embeds:[Empty]})
+      }
       if(client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id) {
-          message.channel.send(`${vietnamese ? `**🚫 |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**🚫 |** Please join **my voice** first!`}`)
+          message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy vào kênh thoại **của tôi** trước đã!` : `**<:cyber_failed:1002595191082983464> |** Please join **my voice** first!`}`)
           return
       }
+      
       const Input = args[0]
-      if (!filters.includes(Input)) return message.reply(`${vietnamese ? `**🚫 |** Filter này không tồn tại!` : `**🚫 |** Please enter valid filter name!`}`)
-      if(!Input)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${vietnamese ? `**🚫 |** Xin hãy ghi tên filter` : `**🚫 |** Please enter filter name`}`)
-          .setImage('https://media.discordapp.net/attachments/965155548611899422/997489122711191643/unknown.png')
-        )
+      if(!Input) {
+        const Embed = new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Xin hãy ghi tên filter` : `**<:cyber_failed:1002595191082983464> |** Please enter filter name`}`)
+        .setImage('https://media.discordapp.net/attachments/965155548611899422/1008285565231312926/unknown.png')
+      
+        message.channel.send({embeds:[Embed]})
+      }
 
-      client.distube.setFilter(message, Input);
+      if (!filters.includes(Input)) return message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Filter này không tồn tại!` : `**<:cyber_failed:1002595191082983464> |** Please enter valid filter name!`}`)
+      if (Input === 'off' && client.distube.getQueue(message).filters?.length) client.distube.getQueue(message).setFilter(false)
+      else if (Object.keys(client.distube.filters).includes(Input)) client.distube.getQueue(message).setFilter(Input)
 
-      message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext,ee.footericon)
-        .setTitle(`${vietnamese ? `**✅ |** Đã cài filter thành: \`${Input}\`` : `**✅ |** Set filter to: \`${Input}\``}`)
-      )
+      message.channel.send(`${vietnamese ? `**<:cyber_success:1002595116164317204> |** Đã cài filter thành: \`${Input}\`` : `**<:cyber_success:1002595116164317204> |** Set filter to: \`${Input}\``}`)
     } catch (e) {
         console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
-        );
+        const Err = new MessageEmbed()
+.setColor(ee.wrongcolor)
+.setFooter(ee.footertext, ee.footericon)
+.setTitle(`**<:warning:1001866544797716511> |** Ôi hỏng rồi | đã xảy ra lỗi!`)
+.setDescription(`\`\`\`${e.stack}\`\`\``)
+return message.channel.send({embeds:[Err]})
     }
   }
 }

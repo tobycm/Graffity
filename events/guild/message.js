@@ -1,6 +1,6 @@
-const ee = require("../../config/embed.json"); //Loading all embed settings like color footertext and icon ...
-const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
-const { escapeRegex } = require("../../handlers/functions"); //Loading all needed functions
+const ee = require("../../config/embed.json")
+const Discord = require("discord.js")
+const { escapeRegex } = require("../../handlers/functions")
 const db = require('quick.db')
 
 const validatePermissions = (permissions) => {
@@ -44,18 +44,22 @@ const validatePermissions = (permissions) => {
     }
   }
 }
-//here the event starts
+
 module.exports = async (client, message, commandOptions) => {
-  try {
-    //if the message is not in a guild (aka in dms), return aka ignore the inputs
-    if (!message.guild) return;
-    // if the message  author is a bot, return aka ignore the inputs
-    if (message.author.bot) return;
-    //if the channel is on partial fetch it
-    if (message.channel.partial) await message.channel.fetch();
-    //if the message is on partial fetch it
-    if (message.partial) await message.fetch();
-    //get the current prefix from the botconfig/config.json
+  try {// options ngôn ngữ
+    const { guild } = message
+    const langDB = db.get(`lang_${guild.id}`)
+    let vietnamese
+    if (langDB) vietnamese = true
+    if (!langDB) vietnamese = false
+
+    // tin nhắn trong DMs
+    if (!message.guild) return
+    // author là bot
+    if (message.author.bot) return
+    if (message.channel.partial) await message.channel.fetch()
+    if (message.partial) await message.fetch()
+    // prefix tùy chỉnh
     const { prefix } = require('../../config/config.json')
     let sv_prefix = db.fetch(`prefix_${message.guild.id}`)
     if(sv_prefix === null) sv_prefix = db.set(`prefix_${message.guild.id}`, prefix)
@@ -67,90 +71,65 @@ module.exports = async (client, message, commandOptions) => {
       db.set(`prefix_${message.guild.id}`, prefix)
     }
     
-    //if its not that then return
-    if (!prefixRegex.test(message.content)) return;
-    //now define the right prefix either ping or not ping
-    const [, matchedPrefix] = message.content.match(prefixRegex);
-    //create the arguments with sliceing of of the rightprefix length
-    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
-    //creating the cmd argument by shifting the args by 1
-    const cmd = args.shift().toLowerCase();
-    //if no cmd added return error
-    if (cmd.length === 0) return message.channel.send(new Discord.MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle(`**🚫 |** Lệnh lạ, nhập để được trợ giúp! **\`${prefix}help\`**`)
-      .setDescription(`Để bắt đầu sử dụng nhập \`${prefix}play {tên nhạc/link}\``)
-    )
-    //get the command from the collection
-    let command = client.commands.get(cmd);
-    //if the command does not exist, try to get it by his alias
-    if (!command) command = client.commands.get(client.aliases.get(cmd));
-    //if the command is now valid
+    // log lỗi
+    if (!prefixRegex.test(message.content)) return
+    const [, matchedPrefix] = message.content.match(prefixRegex)
+    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/)
+    const cmd = args.shift().toLowerCase()
+    // lệnh không tồn tại
+    if (cmd.length === 0) return message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Lệnh lạ, nhập để được trợ giúp! **\`${prefix}help\`**` : `**<:cyber_failed:1002595191082983464> |** Weird command, please type this command to get the help! **\`${prefix}help\`**`}`)
+    // Tính tổng lệnh
+    let command = client.commands.get(cmd)
+    // check alias
+    if (!command) command = client.commands.get(client.aliases.get(cmd))
+    // set lệnh hợp lệ
     if (command){
-        if (!client.cooldowns.has(command.name)) { //if its not in the cooldown, set it too there
-            client.cooldowns.set(command.name, new Discord.Collection());
+        if (!client.cooldowns.has(command.name)) {
+            client.cooldowns.set(command.name, new Discord.Collection())
         }
-        const now = Date.now(); //get the current time
-        const timestamps = client.cooldowns.get(command.name); //get the timestamp of the last used commands
-        const cooldownAmount = (command.cooldown || 1.5) * 1000; //get the cooldownamount of the command, if there is no cooldown there will be automatically 1 sec cooldown, so you cannot spam it^^
-        if (timestamps.has(message.author.id)) { //if the user is on cooldown
-          const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //get the amount of time he needs to wait until he can run the cmd again
-          if (now < expirationTime) { //if he is still on cooldonw
-            const timeLeft = (expirationTime - now) / 1000; //get the lefttime
-            return message.channel.send(new Discord.MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext,ee.footericon)
-              .setTitle(`**🚫 |** Bạn dùng nhanh quá đó, hãy đợi ${timeLeft.toFixed(1)} giây!`)
-            ); //send an information message
+
+        // cooldown lệnh
+        const now = Date.now()
+        const timestamps = client.cooldowns.get(command.name)
+        const cooldownAmount = (command.cooldown || 1.5) * 1000
+        if (timestamps.has(message.author.id)) {
+          const expirationTime = timestamps.get(message.author.id) + cooldownAmount
+          if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000
+            const toofast = await message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Bạn dùng nhanh quá đó, hãy đợi ${timeLeft.toFixed(1)} giây!` : `**<:cyber_failed:1002595191082983464> |** uh ho.. You use too fast, please wait ${timeLeft.toFixed(1)} seconds!`}`)
+            setTimeout(() => toofast.delete(), 5000)
           }
         }
-        timestamps.set(message.author.id, now); //if he is not on cooldown, set it to the cooldown
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //set a timeout function with the cooldown, so it gets deleted later on again
+        timestamps.set(message.author.id, now)
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount)
       try{
-        //try to delete the message of the user who ran the cmd
+        // tin nhắn bị xóa
         try{}catch{}
-        //if Command has specific permission return error
-        if(command.memberpermissions && !message.member.hasPermission(command.memberpermissions)) {
-          return message.channel.send(new Discord.MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle("**🚫 |** Bạn không có quyền để dùng lệnh này")
-            .setDescription(`Bạn cần những quyền sau: \`${command.memberpermissions.join("`, ``")}\``)
-          ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore".gray)));
+        // bot bị thiếu quyền hạn
+        if(!message.guild.me.permissions.has('ADMINISTRATOR')){
+          return message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Thiếu quyền hạn!, quyền yêu cầu: \`Administrator\`` : `**<:cyber_failed:1002595191082983464> |** I missing permission!, require permission: \`Administrator\``}`)
         }
-        //if the Bot has not enough permissions return error
-        if(!message.guild.me.hasPermission(Discord.Permissions.FLAGS.CONNECT)){
-          return message.channel.send(new Discord.MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle("**🚫 |** Thiếu quyền hạn!")
-          .setDescription("**🚫 |** Tôi không có quyền hạn để kết nối!"))
-        }
-        //run the command with the parameters:  client, message, args, user, text, prefix,
-        command.run(client, message, args, message.member, args.join(" "), prefix);
+        // function handle
+        command.run(client, message, args, message.member, args.join(" "), prefix)
       }catch (e) {
+        // Lệnh bị lỗi
         console.log(String(e.stack).red)
-        return message.channel.send(new Discord.MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle("**🚫 |** Có trục trặc kĩ thuật, lệnh: `" + command.name + "`")
-          .setDescription(`\`\`\`${e.message}\`\`\``)
-        ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore".gray)));
+        const ErrReport = new Discord.MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle("**<:cyber_failed:1002595191082983464> |** Có trục trặc kĩ thuật, lệnh: `" + command.name + "`")
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+        
+        // Err commando
+        return message.channel.send({embeds:[ErrReport]})
       }
     }
-    else //if the command is not found send an info msg
-    return message.channel.send(new Discord.MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle(`**🚫 |** Lệnh lạ, nhập để được trợ giúp! **\`${prefix}help\`**`)
-      .setDescription(`Để bắt đầu sử dụng nhập \`${prefix}play {tên nhạc/link}\``)
-    ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore".gray)));
-  }catch (e){
-    return message.channel.send(
-    new Discord.MessageEmbed()
-    .setColor("RED")
-    .setTitle(`**❗️ |** Ôi hỏng rồi | đã xảy ra lỗi!`)
-    .setDescription(`\`\`\`${e.stack}\`\`\``)
-    )}
+    else {
+      // Lệnh lạ 
+      const msg = await message.channel.send(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Lệnh lạ, nhập để được trợ giúp! **\`${prefix}help\`**` : `**<:cyber_failed:1002595191082983464> |** weird command, type this command to get the help! **\`${prefix}help\`**`}`)
+      setTimeout(() => msg.delete(), 5000)
+    }
+  } catch (e) {
+    // nothing
+  }
 }
