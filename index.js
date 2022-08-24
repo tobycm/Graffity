@@ -4,7 +4,6 @@ const fs = require("fs")
 const ee = require('./config/embed.json')
 const db = require('quick.db')
 const { ownerid } = require("./config/config.json")
-const { Captcha } = require('captcha-canvas')
 
 const client = new Discord.Client({
   intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_BANS', 'GUILD_VOICE_STATES', 'GUILD_MEMBERS', 'GUILD_EMOJIS_AND_STICKERS',
@@ -54,7 +53,7 @@ client.cooldowns = new Discord.Collection()
         setTimeout(() => msg.delete(), 5000)
         return
       }
-    }
+    } 
   })
 }
 

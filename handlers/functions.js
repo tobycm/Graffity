@@ -107,5 +107,10 @@ module.exports = {
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
+  },
+  // tachso economy
+  tachso: function (num) {
+    const pattern = /\B(?=(\d{3})+(?!\d))/g;
+    return num.toString().replace(pattern, ',');
   }
 }
