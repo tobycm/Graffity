@@ -18,20 +18,26 @@ module.exports = {
             if (!langDB) vietnamese = false
 
             let Userid = message.author.id
-            const owner = db.fetch(`access_${guild.id}`)
+            const Auth = message.member
+db.fetch(`access_${Auth.id}`)
             if (Userid !== ownerid || Userid !== owner) {
                 await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
                 return
             }
 
             if (Userid === owner || Userid === ownerid) {
-                const Input = args.join(' ')
+                const Input = args.slice(1).join(' ')
+                const Channel = message.mentions.channel.first()
                 if (!Input) {
                     await message.reply('**<:cyber_failed:1002595191082983464> |** Missing Input!')
                     return
                 }
+                if (!Channel) {
+                    await message.reply('**<:cyber_failed:1002595191082983464> |** Missing Channel!')
+                    return
+                }
                 await message.delete()
-                await message.channel.send(`${Input}`)
+                await Channel.send(`${Input}`)
             }
         } catch (e) {
             console.log(String(e.stack).bgRed)

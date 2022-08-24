@@ -16,12 +16,6 @@ module.exports = {
             if (langDB) vietnamese = true
             if (!langDB) vietnamese = false
 
-            const { ownerid } = require('../../config/config.json')
-            let Userid = message.author.id
-            if (Userid !== ownerid) {
-                await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
-                return
-            }
             if (!message.member.permissions.has('KICK_MEMBERS' || 'BAN_MEMBERS' || 'ADMINISTRATOR' || 'MANAGE_GUILD')) {
                 message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Bạn không có quyền để dùng lệnh này!` : `**<:cyber_failed:1002595191082983464> |** You do not have permission to use this command!`}`)
                 return

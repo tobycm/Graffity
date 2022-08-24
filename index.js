@@ -4,6 +4,8 @@ const fs = require("fs")
 const ee = require('./config/embed.json')
 const db = require('quick.db')
 const { ownerid } = require("./config/config.json")
+const { Captcha } = require('captcha-canvas')
+
 const client = new Discord.Client({
   intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_BANS', 'GUILD_VOICE_STATES', 'GUILD_MEMBERS', 'GUILD_EMOJIS_AND_STICKERS',
 'GUILD_INTEGRATIONS', 'GUILD_PRESENCES', 'DIRECT_MESSAGES'],
@@ -57,7 +59,7 @@ client.cooldowns = new Discord.Collection()
 }
 
 // handling
-var arr = ["command", "events", "distube-handler"]
+var arr = ['command', 'events', 'distube-handler']
 arr.forEach(handler => require(`./handlers/${handler}`)(client))
 console.log(`✅ Kết nối với quick.db thành công!`.green)
 console.log(`✅ Kết nối với Distube thành công!`.blue)

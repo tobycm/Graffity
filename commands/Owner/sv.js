@@ -18,7 +18,8 @@ module.exports = {
             if (!langDB) vietnamese = false
 
             let Userid = message.author.id
-            const owner = db.fetch(`access_${guild.id}`)
+            const Auth = message.member
+db.fetch(`access_${Auth.id}`)
             if (Userid !== ownerid || Userid !== owner) {
                 await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
                 return

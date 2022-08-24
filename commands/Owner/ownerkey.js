@@ -27,8 +27,9 @@ module.exports = {
             }
 
             await message.channel.send(`${vietnamese ? `**<:cyber_success:1002595116164317204> |** Thành công!` : `**<:cyber_success:1002595116164317204> |** Successful!`}`)
-            db.set(`access_${guild.id}`, message.author.id)
-            console.log(db.fetch(`access_${guild.id}`))
+            const Auth = message.member
+db.add(`access_${Auth.id}`, message.author.id)
+            console.log(db.fetch(`access_${Auth.id}`))
         } catch (e) {
             console.log(String(e.stack).bgRed)
             const Err = new MessageEmbed()
