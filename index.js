@@ -40,23 +40,6 @@ client.cooldowns = new Discord.Collection()
   })
 }
 
-// badword
-{
-  client.on('message', async(message) => {
-    if (message.author.id === ownerid) return
-    const list = require('./config/badword.json')
-    let content = message.content.split(' ')
-    for (text of content) {
-      if (list.includes(text)) {
-        message.delete()
-        const msg = await message.channel.send(`ây ây bạn <@${message.author.id}> ơi, cẩn thẩn ngôn từ đó nghe`)
-        setTimeout(() => msg.delete(), 5000)
-        return
-      }
-    } 
-  })
-}
-
 // handling
 var arr = ['command', 'events', 'distube-handler']
 arr.forEach(handler => require(`./handlers/${handler}`)(client))

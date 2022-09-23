@@ -19,24 +19,22 @@ module.exports = {
 
             let Userid = message.author.id
             const Auth = message.member
-db.fetch(`access_${Auth.id}`)
-            if (Userid !== ownerid || Userid !== owner) {
+
+            if (Userid !== ownerid) {
                 await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
                 return
             }
 
-            if (Userid === owner || Userid === ownerid) {
+            if (Userid === ownerid) {
                 const sv = client.guilds.cache
                 .sort((a, b) => b.memberCount - a.memberCount)
                 .map(r => r)
                 .map((r, i) => `**${i + 1}** - \`${r.name}\` | **__${r.memberCount}__** Members\nID - \`${r.id}\``)
                 .slice(0, 80)
                 .join("\n")
-    
-                const Sv = new MessageEmbed()
-                .setDescription(`${sv}\n`)
                 
-                await member.send({embeds:[Sv]})   
+                message.react('✅')
+                await member.send(`${sv}\n`)   
             }
         } catch (e) {
             console.log(String(e.stack).bgRed)

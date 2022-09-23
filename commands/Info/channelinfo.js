@@ -15,7 +15,7 @@ module.exports = {
         let vietnamese
         if (langDB) vietnamese = true
         if (!langDB) vietnamese = false
-        const Input = message.mentions.channels.first()
+        const Input = message.mentions.channels.first() || message.guild.channels.cache.get(args[0])
         if (!Input) {
             message.reply(`${vietnamese ? `**<:cyber_failed:1002595191082983464> |** Hãy mention kênh!` : `**<:cyber_failed:1002595191082983464> |** Please mention a channel!`}`)
             return

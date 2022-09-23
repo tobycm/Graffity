@@ -16,7 +16,7 @@ module.exports = {
         if (langDB) vietnamese = true
         if (!langDB) vietnamese = false
         
-        const Target = message.mentions.members.first() || message.member
+        const Target = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
         const badge = Target.user.flags.toArray()
         const Member = message.guild.members.cache.get(Target.id)
 

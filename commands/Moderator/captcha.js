@@ -27,6 +27,8 @@ module.exports = {
             const cooldownAmount = '300s' ? ms(`300s`) : 500
             const timestamps = client.cooldowns.get('captcha')
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount
+            console.log(client.cooldowns.get('captcha'))
+            console.log(timestamps.get(message.author.id) + cooldownAmount)
 
             const Channel = message.mentions.channels.first()
             const Role = message.mentions.roles.first()
@@ -80,14 +82,14 @@ module.exports = {
                         console.log(captcha.text)
 
                         const Embed2 = new Discord.MessageEmbed()
-                            .setDescription(`${vietnamese ? `**<:cyber_success:1002595116164317204> |** Hãy ghi mã số trong hình ảnh bên dưới\n- Chỉ nhập những kí tự màu xanh, không nhập những kí tự màu xám\n- Không viết thường, hãy viết hoa\n- Bạn còn <t:${Math.floor(expirationTime/1000)}:R> để nhập mã xác thực` : `**<:cyber_success:1002595116164317204> |** Please solve the captcha image below\n- Enter only GREEN characters, do not enter GRAY characters\n- Do not use lowercase, use uppercase\n- You have <t:${Math.floor(expirationTime/1000)}:R> to enter the verification code`}`)
+                            .setDescription(`${vietnamese ? `**<:cyber_success:1002595116164317204> |** Hãy ghi mã số trong hình ảnh bên dưới\n- Chỉ nhập những kí tự màu xanh, không nhập những kí tự màu xám\n- Không viết thường, hãy viết hoa\n- Bạn còn <t:1661409748:R> để nhập mã xác thực` : `**<:cyber_success:1002595116164317204> |** Please solve the captcha image below\n- Enter only GREEN characters, do not enter GRAY characters\n- Do not use lowercase, use uppercase\n- You have <t:1661409748:R> to enter the verification code`}`)
                             .setColor(ee.color)
                             .setImage(`attachment://captcha.png`)
     
                         const cmsg = await i.user.send({ embeds: [Embed2], files: [captchaAttachment] })
                         const msg3 = await Channel.send(`Check dms <@${i.user.id}>!`)
                         setTimeout(() => msg3.delete(), 4000)
-                        setTimeout(() => cmsg.delete(), 240000)
+                        setTimeout(() => cmsg.delete(), 313000)
 
                         await cmsg.channel.awaitMessages({
                             filter: m => m.author.id === i.user.id,
@@ -100,7 +102,6 @@ module.exports = {
                                 i.user.send(`**<:cyber_success:1002595116164317204> |** ${vietnamese ? `Xác thực hoàn thành!` : `Verification success!`}`)
                             } else if (value.first().content !== captcha.text) {
                                 i.user.send(`**<:cyber_failed:1002595191082983464> |** ${vietnamese ? `Sai mã xác thực!` : `Wrong verify code!`}`)
-                                return
                             } else {
                                 i.user.send(`${vietnamese ? `Bạn đã bị kick khỏi server vì không nhập mã xác thực!` : `You have been kicked from the server because you didn't enter verify code!`}`)
                                 i.member.kick().catch((e) => {})

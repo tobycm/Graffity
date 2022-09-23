@@ -23,13 +23,13 @@ module.exports = {
 
             let Userid = message.author.id
             const Auth = message.member
-db.fetch(`access_${Auth.id}`)
-            if (Userid !== ownerid || Userid !== owner) {
+
+            if (Userid !== ownerid) {
                 await message.reply(`${vietnamese ? `**\`🔒\` |** Bạn không phải owner của bot!` : `**\`🔒\` |** You're not owner of bot!`}`)
                 return
             }
 
-            if (Userid === owner || Userid === ownerid) {
+            if (Userid === ownerid) {
                 if (!args[0]) {
                     await message.reply('**<:cyber_failed:1002595191082983464> |** Missing Input!')
                     return
