@@ -13,6 +13,7 @@
     "@discordjs/voice": "^0.8.0",
     "@distube/spotify": "^1.2.1",
     "@distube/yt-dlp": "^0.0.2",
+    "@distube/ytdl-core": "^4.11.5",
     "ascii-table": "^0.0.9",
     "captcha-canvas": "^3.0.4",
     "colors": "^1.4.0",
